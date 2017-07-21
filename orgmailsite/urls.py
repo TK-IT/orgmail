@@ -15,7 +15,26 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+import regnskab
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^', regnskab.site.urls),
 ]
+
+try:
+    import debug_toolbar
+except ImportError:
+    pass
+else:
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
+
+# if settings.DEBUG:
+#     # Temporary media (user uploaded static files)
+#     # serving from dev server
+#     urlpatterns.append(
+#         url(r'^media/(?P<path>.*)$',
+#             django.views.static.serve,
+#             {'document_root': settings.MEDIA_ROOT}))
