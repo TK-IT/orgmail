@@ -31,6 +31,10 @@ class DomainList(TemplateView):
         qs = Domain.objects.filter(users=self.request.user)
         qs = qs.annotate(alias_count=Count('alias'))
         context_data['object_list'] = qs
+        query = self.request.GET.get('q')
+        if query:
+            context_data['alias_resolution'] = ', '.join(
+                Alias.translate_recipient(query))
         return context_data
 
 
