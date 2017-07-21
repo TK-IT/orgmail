@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 
 def main():
     parser.parse_args()  # Handle --help
-    server = OrgmailForwarder('127.0.0.1', 9002)
+    server = OrgmailForwarder('0.0.0.0', 9002)
     server.run()
 
 
