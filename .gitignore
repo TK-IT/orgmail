@@ -6,3 +6,4 @@ __pycache__
 /prodekanus/django-*.log
 /prodekanus/orgmail.key
 /prodekanus/venv
+/prodekanus/static
