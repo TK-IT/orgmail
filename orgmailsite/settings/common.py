@@ -23,6 +23,8 @@ BASE_DIR = os.path.dirname(
 # SECRET_KEY = r'''generate with pwgen -s 50 1'''
 DEBUG = True
 
+MANAGER_NAME = 'MANAGER_NAME'
+
 ALLOWED_HOSTS = []
 
 
@@ -104,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'CEST'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 
@@ -117,3 +119,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGIN_URL = '/login/'

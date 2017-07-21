@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Domain(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    description = models.CharField(max_length=
+    description = models.CharField(max_length=100, blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
     users = models.ManyToManyField(User, blank=True)
@@ -24,3 +24,6 @@ class Alias(models.Model):
     @property
     def recipient_list(self):
         return [r.strip() for r in self.recipients.splitlines() if r.strip()]
+
+    def __str__(self):
+        return '%s@%s' % (self.name, self.domain.name)

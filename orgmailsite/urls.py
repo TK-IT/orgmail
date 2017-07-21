@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-import regnskab
+import orgmailadmin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', regnskab.site.urls),
+    url(r'^', orgmailadmin.site.urls),
 ]
 
 try:

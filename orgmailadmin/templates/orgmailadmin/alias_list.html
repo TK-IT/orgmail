@@ -1,0 +1,33 @@
+{% extends "orgmailadmin/base.html" %}
+{% block content %}
+
+<h1>{{ domain }}</h1>
+
+<p><a href="{% url 'orgmailadmin:alias_create' domain_name=domain.name %}">
+    Add alias</a></p>
+
+<table>
+    <thead>
+        <tr>
+            <th>From</th>
+            <th>To</th>
+            <th>Created</th>
+            <th>Last modified</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+	{% for alias in object_list %}
+        <tr>
+            <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">{{ alias.name }}</a></td>
+            <td>{{ alias.recipients|linebreaks }}</td>
+            <td>{{ domain.created_time }}</td>
+            <td>{{ domain.modified_time }}</td>
+            <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">Edit</a>
+            <a href="{% url 'orgmailadmin:alias_delete' domain_name=domain.name alias_name=alias.name %}">Delete</a></td>
+        </tr>
+	{% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -15,12 +15,12 @@
     <tbody>
 	{% for domain in object_list %}
         <tr>
-            <td><a href="{% url 'alias_list' domain_name=domain.name %}">{{ domain }}</a></td>
+            <td><a href="{% url 'orgmailadmin:alias_list' domain_name=domain.name %}">{{ domain }}</a></td>
             <td>{{ domain.description }}</td>
             <td>{{ domain.alias_count }}</td>
             <td>{{ domain.created_time }}</td>
             <td>{{ domain.modified_time }}</td>
-            <td><a href="{% url 'domain_update' domain_name=domain.name %}">Edit</a></td>
+            <td><a href="{% url 'orgmailadmin:domain_update' domain_name=domain.name %}">Edit</a></td>
         </tr>
 	{% endfor %}
     </tbody>

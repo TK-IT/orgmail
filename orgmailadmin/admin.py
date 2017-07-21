@@ -1,4 +1,5 @@
 from django.contrib import admin
+from orgmailadmin.models import Domain, Alias
 
 
 @admin.register(Domain)
