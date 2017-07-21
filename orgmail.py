@@ -10,7 +10,12 @@ class UnknownLocal(Exception):
 
 
 def import_orgmailadmin_models():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'orgmailsite.settings')
+    import json
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(BASE_DIR, 'env.json')) as fp:
+        os.environ.update(json.load(fp))
+
     import django
     django.setup()
     import orgmailadmin.models
