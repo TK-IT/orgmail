@@ -1,0 +1,13 @@
+[Unit]
+Description=orgmail SMTP server
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+ExecStart=/home/orgmail/orgmail/prodekanus/venv/bin/python -m orgmaild
+Restart=on-failure
+WorkingDirectory=/home/orgmail/orgmail
+User=orgmail
+Group=orgmail
+Environment=PYTHONPATH=. VIRTUAL_ENV=/home/orgmail/orgmail/prodekanus/venv PATH=/home/orgmail/orgmail/prodekanus/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
