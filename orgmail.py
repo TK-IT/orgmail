@@ -23,15 +23,25 @@ def import_orgmailadmin_models():
 
 
 def translate_recipient(recipient):
-    try:
-        local_part, domain_part = recipient.split('@')
-    except ValueError:
-        raise ValueError(recipient)
     models = import_orgmailadmin_models()
-    try:
+
+    domains = {domain.name: domain
+               for domain in models.Domain.objects.all()}
+
+    resolved = {}
+
+    def resolve(recipient):
         try:
-            domain = models.Domain.objects.get(name=domain_part)
-        except models.Domain.DoesNotExist:
+            return resolved[recipient]
+        except KeyError:
+            pass
+        try:
+            local_part, domain_name = recipient.split('@')
+        except ValueError:
+            raise ValueError(recipient)
+        try:
+            domain = domains[domain_name]
+        except KeyError:
             raise UnknownDomain(recipient)
         try:
             alias = models.Alias.objects.get(
@@ -43,7 +53,21 @@ def translate_recipient(recipient):
                     domain=domain, name=models.Alias.CATCHALL_NAME)
             except models.Alias.DoesNotExist:
                 raise UnknownLocal(recipient)
-        return alias.recipient_list
+
+        resolved[recipient] = ()
+        result = []
+        for r in alias.recipient_list:
+            try:
+                result.extend(resolve(r))
+            except UnknownDomain:
+                result.append(r)
+            except UnknownLocal:
+                pass
+        resolved[recipient] = result
+        return result
+
+    try:
+        return resolve(recipient)
     finally:
         from django.db import connection
         connection.close()
