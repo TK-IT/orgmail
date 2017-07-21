@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
+from orgmail import UnknownDomain, UnknownLocal
 
 
 class Domain(models.Model):
@@ -40,3 +41,48 @@ class Alias(models.Model):
 
     def __str__(self):
         return '%s@%s' % (self.name, self.domain.name)
+
+    @staticmethod
+    def translate_recipient(recipient):
+        domains = {domain.name: domain
+                   for domain in Domain.objects.all()}
+
+        resolved = {}
+
+        def resolve(recipient):
+            try:
+                return resolved[recipient]
+            except KeyError:
+                pass
+            try:
+                local_part, domain_name = recipient.split('@')
+            except ValueError:
+                raise ValueError(recipient)
+            try:
+                domain = domains[domain_name]
+            except KeyError:
+                raise UnknownDomain(recipient)
+            try:
+                alias = Alias.objects.get(
+                    domain=domain, name=local_part)
+            except Alias.DoesNotExist:
+                try:
+                    # Catch-all
+                    alias = Alias.objects.get(
+                        domain=domain, name=Alias.CATCHALL_NAME)
+                except Alias.DoesNotExist:
+                    raise UnknownLocal(recipient)
+
+            resolved[recipient] = ()
+            result = []
+            for r in alias.recipient_list:
+                try:
+                    result.extend(resolve(r))
+                except UnknownDomain:
+                    result.append(r)
+                except UnknownLocal:
+                    pass
+            resolved[recipient] = result
+            return result
+
+        return resolve(recipient)
