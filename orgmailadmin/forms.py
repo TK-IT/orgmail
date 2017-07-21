@@ -39,6 +39,7 @@ class AliasForm(forms.Form):
             return
         instance.name = name
         instance.recipients = self.cleaned_data['recipients']
+        instance.clean()
         return {'instance': instance}
 
     def save(self):
