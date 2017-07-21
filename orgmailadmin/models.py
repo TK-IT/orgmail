@@ -14,6 +14,8 @@ class Domain(models.Model):
 
 
 class Alias(models.Model):
+    CATCHALL_NAME = '*'
+
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     recipients = models.TextField()
