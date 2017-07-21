@@ -10,7 +10,7 @@ class UnknownLocal(Exception):
 
 
 def import_orgmailadmin_models():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'orgmailadmin.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'orgmailsite.settings')
     import django
     django.setup()
     import orgmailadmin.models
