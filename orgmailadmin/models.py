@@ -85,4 +85,4 @@ class Alias(models.Model):
             resolved[recipient] = result
             return result
 
-        return resolve(recipient)
+        return sorted(set(resolve(recipient)))
