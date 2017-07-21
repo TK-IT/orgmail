@@ -7,3 +7,5 @@ __pycache__
 /prodekanus/orgmail.key
 /prodekanus/venv
 /prodekanus/static
+/env.json
+/orgmaild.log
