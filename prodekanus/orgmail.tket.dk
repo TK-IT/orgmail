@@ -1,0 +1,53 @@
+<VirtualHost *:80>
+	ServerName orgmail.tket.dk
+	ServerAdmin mathiasrav@gmail.com
+	DocumentRoot /home/orgmail/orgmail/prodekanus/public_html
+
+	Alias /.well-known/acme-challenge/ /home/letsencrypt/acme-challenge/orgmail.tket.dk/
+	RewriteEngine on
+	RewriteCond %{REQUEST_URI} !^/\.well-known
+	RewriteRule ^/(.*) https://orgmail.tket.dk/$1 [L,R]
+	<Directory /home/letsencrypt/acme-challenge/orgmail.tket.dk/>
+		Require all granted
+	</Directory>
+</VirtualHost>
+<VirtualHost *:443>
+	ServerName orgmail.tket.dk
+	ServerAdmin mathiasrav@gmail.com
+	DocumentRoot /home/orgmail/orgmail/prodekanus/public_html
+
+	SSLEngine on
+	SSLStrictSNIVHostCheck on
+	SSLCertificateFile /home/letsencrypt/certs/orgmail.tket.dk.crt
+	SSLCertificateKeyFile /home/orgmail/orgmail/prodekanus/orgmail.key
+	SSLCertificateChainFile /home/letsencrypt/certs/lets-encrypt-x3-cross-signed.pem
+	SSLCACertificateFile /home/letsencrypt/certs/lets-encrypt-x3-cross-signed.pem
+	SSLUseStapling on
+
+	WSGIDaemonProcess orgmail.tket.dk python-home=/home/orgmail/orgmail/prodekanus/venv python-path=/home/orgmail/orgmail
+	WSGIProcessGroup orgmail.tket.dk
+	WSGIScriptAlias / /home/orgmail/orgmail/orgmailsite/wsgi.py
+
+	Alias /favicon.ico /home/orgmail/orgmail/prodekanus/static/favicon.ico
+	Alias /robots.txt /home/orgmail/orgmail/prodekanus/static/robots.txt
+	Alias /static/ /home/orgmail/orgmail/prodekanus/static/
+	Alias /uploads/ /home/orgmail/orgmail/prodekanus/uploads/
+	Alias /.well-known/acme-challenge/ /home/letsencrypt/acme-challenge/orgmail.tket.dk/
+
+	<Directory /home/letsencrypt/acme-challenge/orgmail.tket.dk/>
+		Require all granted
+	</Directory>
+	<Directory /home/orgmail/orgmail/orgmailsite/>
+		<Files wsgi.py>
+			Require all granted
+		</Files>
+	</Directory>
+	<Directory /home/orgmail/orgmail/prodekanus/public_html/>
+		Require all granted
+	</Directory>
+	<Directory /home/orgmail/orgmail/prodekanus/static/>
+		Require all granted
+	</Directory>
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
