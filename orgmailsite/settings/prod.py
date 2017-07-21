@@ -23,6 +23,8 @@ if DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
 EMAIL_HOST = 'smtp01.uni.au.dk'
 SERVER_EMAIL = 'mailhole@prodekanus.studorg.au.dk'
 
+import os, pwd
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -35,7 +37,8 @@ LOGGING = {
     'handlers': {
         'file': {
             'class': 'logging.handlers.WatchedFileHandler',
-            'filename': os.path.join(BASE_DIR, 'prodekanus/django.log'),
+            'filename': os.path.join(BASE_DIR, 'prodekanus',
+                                     'django-%s.log' % pwd.getpwuid(os.geteuid()).pw_name),
             'formatter': 'simple',
         },
         'mail_admins': {
