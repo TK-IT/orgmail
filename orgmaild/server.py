@@ -11,8 +11,9 @@ from orgmail import (
 class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
     MAIL_FROM = 'admin@TAAGEKAMMERET.dk'
 
-    def get_mailhole_key(self):
-        return os.getenv('MAILHOLE_KEY')
+    def __init__(self, receiver_host, receiver_port):
+        # Set relay_host to 0.0.0.0 to ensure that no mail is relayed via SMTP.
+        super().__init__(receiver_host, receiver_port, '0.0.0.0', 25)
 
     def should_mailhole(self, message, recipient, sender):
         # Send everything to mailhole
