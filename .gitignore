@@ -3,3 +3,6 @@
 __pycache__
 *.sqlite3
 /orgmailsite/settings/__init__.py
+/prodekanus/django-*.log
+/prodekanus/orgmail.key
+/prodekanus/venv
