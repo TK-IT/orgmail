@@ -15,7 +15,7 @@ class LoginView(auth_views.LoginView):
 
 
 def user_has_domains(user):
-    return Domain.objects.filter(users=user).exists()
+    return user.is_authenticated and Domain.objects.filter(users=user).exists()
 
 
 domains_required = method_decorator(user_passes_test(user_has_domains),
