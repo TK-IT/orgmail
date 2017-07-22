@@ -87,8 +87,10 @@ class AliasCreate(FormView):
 
     def form_valid(self, form):
         form.save()
+        domain = self.get_domain()
+        domain.save()  # Update domain.modified_time
         return redirect('orgmailadmin:alias_list',
-                        domain_name=self.get_domain().name)
+                        domain_name=domain.name)
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -125,6 +127,9 @@ class AliasDelete(DeleteView):
         return get_object_or_404(Alias, domain=self.get_domain(),
                                  name=self.kwargs['alias_name'])
 
-    def get_success_url(self):
-        return reverse('orgmailadmin:alias_list',
-                       kwargs=dict(domain_name=self.get_domain().name))
+    def form_valid(self, form):
+        form.save()
+        domain = self.get_domain()
+        domain.save()  # Update domain.modified_time
+        return redirect('orgmailadmin:alias_list',
+                        domain_name=domain.name)
