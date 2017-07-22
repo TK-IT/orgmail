@@ -30,6 +30,7 @@ class DomainList(TemplateView):
         context_data = super().get_context_data(**kwargs)
         qs = Domain.objects.filter(users=self.request.user)
         qs = qs.annotate(alias_count=Count('alias'))
+        qs = qs.order_by('name')
         context_data['object_list'] = qs
         query = self.request.GET.get('q')
         if query:
@@ -66,7 +67,9 @@ class AliasList(TemplateView):
         context_data = super().get_context_data(**kwargs)
         domain = self.get_domain()
         context_data['domain'] = domain
-        context_data['object_list'] = Alias.objects.filter(domain=domain)
+        qs = Alias.objects.filter(domain=domain)
+        qs = qs.order_by('name')
+        context_data['object_list'] = qs
         return context_data
 
 
