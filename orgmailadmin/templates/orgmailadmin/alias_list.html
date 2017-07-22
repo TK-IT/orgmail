@@ -19,7 +19,7 @@
     <tbody>
 	{% for alias in object_list %}
         <tr>
-            <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">{{ alias.name }}</a></td>
+            <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">{{ alias.name }}@{{ domain }}</a></td>
             <td>{{ alias.recipients|linebreaksbr }}</td>
             <td>{{ domain.created_time }}</td>
             <td>{{ domain.modified_time }}</td>
