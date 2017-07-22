@@ -3,10 +3,12 @@
 
 <h1>{{ object|yesno:"Update,Create alias" }} {{ object }}</h1>
 
-<p>Domain: {{ domain }}</p>
-
 <form method="post">{% csrf_token %}
-    {{ form.as_p }}
+    {{ name.errors }}
+    <p><label>Alias: {{ name }}@{{ domain }}</label></p>
+    {{ recipients.errors }}
+    <p>To:</p>
+    <p>{{ recipients }}</p>
     <input type="submit" value="Save" />
 </form>
 {% endblock %}
