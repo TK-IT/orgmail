@@ -21,8 +21,8 @@
         <tr>
             <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">{{ alias.name }}@{{ domain }}</a></td>
             <td>{{ alias.recipients|linebreaksbr }}</td>
-            <td>{{ domain.created_time }}</td>
-            <td>{{ domain.modified_time }}</td>
+            <td>{{ alias.created_time }}</td>
+            <td>{{ alias.modified_time }}</td>
             <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">Edit</a>
             <a href="{% url 'orgmailadmin:alias_delete' domain_name=domain.name alias_name=alias.name %}">Delete</a></td>
         </tr>
