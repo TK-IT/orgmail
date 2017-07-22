@@ -4,11 +4,11 @@
 <h1>{{ object|yesno:"Update,Create alias" }} {{ object }}</h1>
 
 <form method="post">{% csrf_token %}
-    {{ name.errors }}
-    <p><label>Alias: {{ name }}@{{ domain }}</label></p>
-    {{ recipients.errors }}
+    {{ form.name.errors }}
+    <p><label>Alias: {{ form.name }}@{{ domain }}</label></p>
+    {{ form.recipients.errors }}
     <p>To:</p>
-    <p>{{ recipients }}</p>
+    <p>{{ form.recipients }}</p>
     <input type="submit" value="Save" />
 </form>
 {% endblock %}
