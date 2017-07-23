@@ -22,7 +22,7 @@ if DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
         "SET sql_mode='STRICT_TRANS_TABLES'")
 
 EMAIL_HOST = 'smtp01.uni.au.dk'
-SERVER_EMAIL = 'mailhole@prodekanus.studorg.au.dk'
+SERVER_EMAIL = 'orgmail@prodekanus.studorg.au.dk'
 
 import os, pwd
 
@@ -53,7 +53,7 @@ LOGGING = {
             'handlers': ['file', 'mail_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
         },
-        'mailhole': {
+        'orgmail': {
             'handlers': ['file', 'mail_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
