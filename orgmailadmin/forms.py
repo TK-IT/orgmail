@@ -110,6 +110,7 @@ class ImportForm(forms.Form):
         aliases = self.cleaned_data['models']
         created = Alias._meta.get_field('created_time')
         modified = Alias._meta.get_field('modified_time')
+        saved = []
         with suppress_datetime_auto(created), suppress_datetime_auto(modified):
             for a in aliases:
                 if (a.domain_name, a.name) in existing:
@@ -125,4 +126,6 @@ class ImportForm(forms.Form):
                     a.domain = d
                 a.clean()
                 a.save()
+                saved.append(a)
                 existing[a.domain.name, a.name] = a
+        return saved

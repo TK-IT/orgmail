@@ -1,3 +1,4 @@
+import logging
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
 from django.core.urlresolvers import reverse
@@ -7,6 +8,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
 from orgmailadmin.models import Domain, Alias
 from orgmailadmin.forms import AliasForm, AuthenticationForm, ImportForm
+
+
+logger = logging.getLogger('orgmail')
 
 
 class LoginView(auth_views.LoginView):
@@ -52,8 +56,13 @@ class DomainUpdate(UpdateView):
                                  users=self.request.user,
                                  name=self.kwargs['domain_name'])
 
-    def get_success_url(self):
-        return reverse('orgmailadmin:domain_list')
+    def form_valid(self, form):
+        logger.info('user:%s domain:%s description=%r',
+                    self.request.user.username,
+                    self.object.name,
+                    form.cleaned_data['description'])
+        form.save()
+        return redirect('orgmailadmin:domain_list')
 
 
 @domains_required
@@ -91,8 +100,15 @@ class AliasCreate(FormView):
         return form_kwargs
 
     def form_valid(self, form):
-        form.save()
         domain = self.get_domain()
+        alias = form.cleaned_data['instance']
+        logger.info('user:%s domain:%s %s %s=>%s',
+                    self.request.user.username,
+                    'update' if alias.pk else 'create',
+                    domain.name,
+                    alias.name,
+                    ','.join(alias.recipient_list))
+        form.save()
         domain.save()  # Update domain.modified_time
         return redirect('orgmailadmin:alias_list',
                         domain_name=domain.name)
@@ -133,8 +149,13 @@ class AliasDelete(DeleteView):
                                  name=self.kwargs['alias_name'])
 
     def form_valid(self, form):
-        form.save()
         domain = self.get_domain()
+        alias = self.get_object()
+        logger.info('user:%s domain:%s delete %s',
+                    self.request.user.username,
+                    domain.name,
+                    alias.name)
+        form.save()
         domain.save()  # Update domain.modified_time
         return redirect('orgmailadmin:alias_list',
                         domain_name=domain.name)
@@ -146,5 +167,9 @@ class ImportView(FormView):
     form_class = ImportForm
 
     def form_valid(self, form):
-        form.save([self.request.user])
+        saved = form.save([self.request.user])
+        if saved:
+            logger.info('user:%s imported %s aliases',
+                        self.request.user.username,
+                        len(saved))
         return redirect('orgmailadmin:domain_list')
