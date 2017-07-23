@@ -3,6 +3,7 @@ from .common import *
 ADMINS = (
     ('Mathias Rav', 'rav@cs.au.dk'),
 )
+MANAGER_NAME = ADMINS[0][0]
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 DEBUG = False
