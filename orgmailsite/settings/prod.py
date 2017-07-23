@@ -41,6 +41,7 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'prodekanus',
                                      'django-%s.log' % pwd.getpwuid(os.geteuid()).pw_name),
             'formatter': 'simple',
+            'encoding': 'utf-8',
         },
         'mail_admins': {
             'level': 'ERROR',
