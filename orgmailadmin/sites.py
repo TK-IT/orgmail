@@ -8,6 +8,7 @@ class OrgmailadminSite(object):
         urls = [
             url(r'^login/$', views.LoginView.as_view(), name='login'),
             url(r'^$', views.DomainList.as_view(), name='domain_list'),
+            url(r'^import/$', views.ImportView.as_view(), name='import'),
             url(r'^(?P<domain_name>[^/]+)/details/$',
                 views.DomainUpdate.as_view(), name='domain_update'),
             url(r'^(?P<domain_name>[^/]+)/$',
