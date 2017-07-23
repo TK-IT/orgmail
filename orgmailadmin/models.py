@@ -19,11 +19,16 @@ class Alias(models.Model):
     CATCHALL_NAME = '*'
 
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     recipients = models.TextField()
 
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [
+            ('domain', 'name'),
+        ]
 
     def clean(self):
         from_address = '%s@%s' % (self.name, self.domain.name)
