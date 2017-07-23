@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, FormView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
-from orgmailadmin.models import Domain, Alias
+from orgmailadmin.models import Domain, Alias, UnknownDomain, UnknownLocal
 from orgmailadmin.forms import AliasForm, AuthenticationForm, ImportForm
 
 
@@ -40,8 +40,11 @@ class DomainList(TemplateView):
         context_data['object_list'] = qs
         query = self.request.GET.get('q')
         if query:
-            context_data['alias_resolution'] = ', '.join(
-                Alias.translate_recipient(query))
+            try:
+                result = Alias.translate_recipient(query)
+            except (UnknownDomain, UnknownLocal) as exn:
+                result = ['%s: %s' % (exn.__class__.__name__, exn)]
+            context_data['alias_resolution'] = ', '.join(result)
         return context_data
 
 
