@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import views as auth_views
 from orgmailadmin.models import Domain, Alias
-from orgmailadmin.forms import AliasForm, AuthenticationForm
+from orgmailadmin.forms import AliasForm, AuthenticationForm, ImportForm
 
 
 class LoginView(auth_views.LoginView):
@@ -20,6 +20,8 @@ def user_has_domains(user):
 
 domains_required = method_decorator(user_passes_test(user_has_domains),
                                     name='dispatch')
+superuser_required = method_decorator(
+    user_passes_test(lambda u: u.is_superuser), name='dispatch')
 
 
 @domains_required
@@ -136,3 +138,13 @@ class AliasDelete(DeleteView):
         domain.save()  # Update domain.modified_time
         return redirect('orgmailadmin:alias_list',
                         domain_name=domain.name)
+
+
+@superuser_required
+class ImportView(FormView):
+    template_name = 'orgmailadmin/import_form.html'
+    form_class = ImportForm
+
+    def form_valid(self, form):
+        form.save([self.request.user])
+        return redirect('orgmailadmin:domain_list')
