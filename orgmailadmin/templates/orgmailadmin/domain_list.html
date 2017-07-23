@@ -31,4 +31,11 @@
     <p>{{ alias_resolution }}</p>
 </form>
 
+{% if user.is_superuser %}
+<p>For Django superusers:</p>
+<ul>
+    <li><a href="{% url 'orgmailadmin:import' %}">Import from postfixadmin</a></li>
+</ul>
+{% endif %}
+
 {% endblock %}
