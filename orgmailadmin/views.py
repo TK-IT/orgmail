@@ -42,7 +42,7 @@ class DomainList(TemplateView):
         if query:
             try:
                 result = Alias.translate_recipient(query)
-            except (UnknownDomain, UnknownLocal) as exn:
+            except (UnknownDomain, UnknownLocal, ValueError) as exn:
                 result = ['%s: %s' % (exn.__class__.__name__, exn)]
             context_data['alias_resolution'] = ', '.join(result)
         return context_data
