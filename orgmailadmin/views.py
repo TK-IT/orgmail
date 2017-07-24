@@ -18,6 +18,14 @@ class LoginView(auth_views.LoginView):
     form_class = AuthenticationForm
 
 
+class LogoutView(auth_views.LogoutView):
+    template_name = 'orgmailadmin/logged_out.html'
+
+
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = 'orgmailadmin/password_change.html'
+
+
 def user_has_domains(user):
     return user.is_authenticated and Domain.objects.filter(users=user).exists()
 
