@@ -21,7 +21,7 @@ class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
 
     def translate_recipient(self, rcptto):
         try:
-            return translate_recipient(rcptto)
+            return translate_recipient(rcptto, count_hit=True)
         except (UnknownDomain, UnknownLocal) as exn:
             raise InvalidRecipient(
                 '%s: %s' % (exn.__class__.__name__, exn))

@@ -22,11 +22,11 @@ def import_orgmailadmin_models():
     return orgmailadmin.models
 
 
-def translate_recipient(recipient):
+def translate_recipient(recipient, count_hit=False):
     models = import_orgmailadmin_models()
 
     try:
-        return models.Alias.translate_recipient(recipient)
+        return models.Alias.translate_recipient(recipient, count_hit=count_hit)
     finally:
         from django.db import connection
         connection.close()

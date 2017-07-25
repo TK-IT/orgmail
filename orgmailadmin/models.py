@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import F
+from django.utils import timezone
 from django.contrib.auth.models import User
 from orgmail import UnknownDomain, UnknownLocal
 
@@ -24,6 +26,8 @@ class Alias(models.Model):
 
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
+    hits = models.IntegerField(default=0)
+    last_hit = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = [
@@ -48,7 +52,7 @@ class Alias(models.Model):
         return '%s@%s' % (self.name, self.domain.name)
 
     @staticmethod
-    def translate_recipient(recipient):
+    def translate_recipient(recipient, count_hit=False):
         domains = {domain.name: domain
                    for domain in Domain.objects.all()}
 
@@ -78,16 +82,21 @@ class Alias(models.Model):
                 except Alias.DoesNotExist:
                     raise UnknownLocal(recipient)
 
-            resolved[recipient] = ()
+            resolved[recipient] = alias, ()
             result = []
-            for r in alias.recipient_list:
+            for target in alias.recipient_list:
                 try:
-                    result.extend(resolve(r))
+                    target_alias, target_list = resolve(target)
+                    result.extend(target_list)
                 except UnknownDomain:
-                    result.append(r)
+                    result.append(target)
                 except UnknownLocal:
                     pass
-            resolved[recipient] = result
-            return result
+            resolved[recipient] = alias, result
+            return alias, result
 
-        return sorted(set(resolve(recipient)))
+        alias, recipient_list = resolve(recipient)
+        if count_hit:
+            Alias.objects.filter(pk=alias.pk).update(
+                hits=F('hits')+1, last_hit=timezone.now())
+        return sorted(set(recipient_list))
