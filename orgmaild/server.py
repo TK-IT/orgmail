@@ -15,6 +15,9 @@ class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
         # Set relay_host to 0.0.0.0 to ensure that no mail is relayed via SMTP.
         super().__init__(receiver_host, receiver_port, '0.0.0.0', 25)
 
+    def startup_log(self):
+        logger.info('orgmaild listening on %s:%s' % (self.host, self.port))
+
     def should_mailhole(self, message, recipient, sender):
         # Send everything to mailhole
         return True
