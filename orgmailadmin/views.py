@@ -159,14 +159,14 @@ class AliasDelete(DeleteView):
         return get_object_or_404(Alias, domain=self.get_domain(),
                                  name=self.kwargs['alias_name'])
 
-    def form_valid(self, form):
+    def delete(self, request, *args, **kwargs):
         domain = self.get_domain()
         alias = self.get_object()
         logger.info('user:%s domain:%s delete %s',
                     self.request.user.username,
                     domain.name,
                     alias.name)
-        form.save()
+        alias.delete()
         domain.save()  # Update domain.modified_time
         return redirect('orgmailadmin:alias_list',
                         domain_name=domain.name)
