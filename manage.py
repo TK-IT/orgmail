@@ -1,8 +1,16 @@
 #!/usr/bin/env python
 import os
 import sys
+import json
 
 if __name__ == "__main__":
+    if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        try:
+            with open(os.path.join(BASE_DIR, 'env.json')) as fp:
+                os.environ.update(json.load(fp))
+        except FileNotFoundError:
+            pass
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orgmailsite.settings")
     try:
         from django.core.management import execute_from_command_line
