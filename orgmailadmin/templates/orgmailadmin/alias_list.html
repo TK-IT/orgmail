@@ -13,6 +13,8 @@
             <th>To</th>
             <th>Created</th>
             <th>Last modified</th>
+            <th>Hits</th>
+            <th>Last hit</th>
             <th>Edit</th>
         </tr>
     </thead>
@@ -23,6 +25,8 @@
             <td>{{ alias.recipients|linebreaksbr }}</td>
             <td>{{ alias.created_time }}</td>
             <td>{{ alias.modified_time }}</td>
+            <td>{{ alias.hits }}</td>
+            <td>{{ alias.last_hit|default:"-" }}</td>
             <td><a href="{% url 'orgmailadmin:alias_update' domain_name=domain.name alias_name=alias.name %}">Edit</a>
             <a href="{% url 'orgmailadmin:alias_delete' domain_name=domain.name alias_name=alias.name %}">Delete</a></td>
         </tr>
