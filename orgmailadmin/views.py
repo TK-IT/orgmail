@@ -25,6 +25,9 @@ class LogoutView(auth_views.LogoutView):
 class PasswordChangeView(auth_views.PasswordChangeView):
     template_name = 'orgmailadmin/password_change.html'
 
+    def get_success_url(self):
+        return reverse('orgmailadmin:domain_list')
+
 
 def user_has_domains(user):
     return user.is_authenticated and Domain.objects.filter(users=user).exists()
