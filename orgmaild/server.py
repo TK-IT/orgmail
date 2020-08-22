@@ -13,6 +13,7 @@ class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
     MAIL_FROM = 'admin@TAAGEKAMMERET.dk'
 
     REWRITE_FROM = True
+    STRIP_HTML = True
 
     def __init__(self, receiver_host, receiver_port):
         # Set relay_host to 0.0.0.0 to ensure that no mail is relayed via SMTP.
@@ -47,5 +48,15 @@ class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
             new_from = email.utils.formataddr((name, addr))
             message.set_unique_header("From", new_from)
             message.set_unique_header("Reply-To", orig_from)
+        if self.STRIP_HTML:
+            from emailtunnel.extract_text import get_body_text
+
+            del message.message["DKIM-Signature"]
+            t = get_body_text(message.message)
+            message.set_unique_header("Content-Type", "text/plain")
+            del message.message["Content-Transfer-Encoding"]
+            charset = email.charset.Charset("utf-8")
+            charset.header_encoding = charset.body_encoding = email.charset.QP
+            message.message.set_payload(t, charset=charset)
 
         super().forward(original_envelope, message, recipients, sender)
