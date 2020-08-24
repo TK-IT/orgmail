@@ -10,10 +10,11 @@ from orgmail import (
 
 
 class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
-    MAIL_FROM = 'admin@TAAGEKAMMERET.dk'
+    # MAIL_FROM = 'admin@TAAGEKAMMERET.dk'
+    MAIL_FROM = None
 
-    REWRITE_FROM = True
-    STRIP_HTML = True
+    REWRITE_FROM = False
+    STRIP_HTML = False
 
     def __init__(self, receiver_host, receiver_port):
         # Set relay_host to 0.0.0.0 to ensure that no mail is relayed via SMTP.
@@ -34,7 +35,9 @@ class OrgmailForwarder(SMTPForwarder, MailholeRelayMixin):
                 '%s: %s' % (exn.__class__.__name__, exn))
 
     def get_envelope_mailfrom(self, envelope, recipients=None):
-        return self.__class__.MAIL_FROM
+        if self.MAIL_FROM is not None:
+            return self.MAIL_FROM
+        return envelope.mailfrom
 
     def forward(self, original_envelope, message, recipients, sender):
         if self.REWRITE_FROM:
