@@ -43,7 +43,7 @@ class AliasForm(forms.Form):
             return
         instance.name = name
         instance.recipients = self.cleaned_data['recipients']
-        instance.clean()
+        instance.full_clean()
         return {'instance': instance}
 
     def save(self):
@@ -119,12 +119,12 @@ class ImportForm(forms.Form):
                     a.domain = domains[a.domain_name]
                 except KeyError:
                     d = domains[a.domain_name] = Domain(name=a.domain_name)
-                    d.clean()
+                    d.full_clean()
                     d.save()
                     # Now that d has a pk, we can set d.users and a.domain_id
                     d.users = new_domain_users
                     a.domain = d
-                a.clean()
+                a.full_clean()
                 a.save()
                 saved.append(a)
                 existing[a.domain.name, a.name] = a
