@@ -1,0 +1,6 @@
+django>=3.2,<3.2.99
+aiosmtpd
+git+https://github.com/TK-IT/emailtunnel@ef096c8cad7a4096ef1ec19e69596d78f3de9109
+requests
+dj-database-url
+mysqlclient

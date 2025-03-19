@@ -1,7 +1,7 @@
 import logging
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.generic import TemplateView, FormView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
