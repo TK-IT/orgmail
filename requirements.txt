@@ -40,5 +40,5 @@ typing-extensions==4.12.2
     # via
     #   asgiref
     #   dj-database-url
-urllib3==2.3.0
+urllib3==2.6.0
     # via requests
